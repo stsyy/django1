@@ -1,17 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from english.models import Student
-from django.views import View
+from django.views.generic import TemplateView
 
 # Create your views here.
-class ShowStudentsView(View):
-    def get(request, *args, **kwargs):
-    #return HttpResponse("Привет!")
-        students=Student.objects.all()
+class ShowStudentsView(TemplateView):
+    template_name="students/show_students.html"
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["students"] = Student.objects.all()
+        return context
     
-        result = ""
-    
-        for s in students:
-            result += s.name + "<br>"
-        
-        return HttpResponse(result)    

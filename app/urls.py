@@ -19,8 +19,14 @@ from django.contrib import admin
 from django.urls import path
 
 from english import views
+from rest_framework.routers import DefaultRouter
+from english.api import StudentsViewset
+
+router = DefaultRouter()
+router.register("students", StudentsViewset, basename="students")
 
 urlpatterns = [
     path('', views.ShowStudentsView.as_view()),
     path("admin/", admin.site.urls),
+    path('api/', include(router.urls)),
 ]
