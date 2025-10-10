@@ -1,17 +1,17 @@
 from django.db import models
 
 class Word(models.Model):
-    word = models.TextField("Слово")
-    translation = models.TextField("Перевод")
-    picture = models.TextField("Картинка")
-    topic = models.TextField("Тема")
+    word = models.CharField("Слово")
+    translation = models.CharField("Перевод")
+    picture = models.ImageField("Картинка")
+    topic = models.CharField("Тема")
     
     def __str__(self):
         return f"{self.word} - {self.translation}"
     
 class Test(models.Model):
-    question = models.TextField("Вопрос")
-    answer = models.TextField("Правильный ответ")
+    question = models.CharField("Вопрос")
+    answer = models.CharField("Правильный ответ")
     variants = models.TextField("Варианты")
     
     def __str__(self):
@@ -28,7 +28,7 @@ class Result(models.Model):
         return f"{self.student} - {self.test}: {self.score} баллов"
         
 class Lesson(models.Model):
-    ltopic = models.TextField("Тема урока")
+    ltopic = models.CharField("Тема урока")
     ltest = models.DateField("Дата")  
     homework = models.TextField("Домашнее задание")
     words = models.ManyToManyField(Word, verbose_name="Список слов")
@@ -38,10 +38,10 @@ class Lesson(models.Model):
         return f"Урок: {self.ltopic} ({self.ltest})"
     
 class Student(models.Model):
-    name = models.TextField("ФИО")
-    login = models.TextField("Логин")
-    password = models.TextField("Пароль")
-    level = models.TextField("Уровень")
+    name = models.CharField("ФИО")
+    login = models.CharField("Логин")
+    password = models.CharField("Пароль")
+    level = models.CharField("Уровень")
     progress = models.IntegerField("Прогресс")
         
     def __str__(self) -> str:
