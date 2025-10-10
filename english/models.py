@@ -1,15 +1,10 @@
-from django.db import models
-
-class Word(models.Model):
-    word = models.CharField("Слово")
-    translation = models.CharField("Перевод")
-    picture = models.ImageField("Картинка")
-    topic = models.CharField("Тема")
-    
-    def __str__(self):
-        return f"{self.word} - {self.translation}"
+from django.db import models  
     
 class Test(models.Model):
+    name = models.CharField()    
+
+class TestQuestion(models.Model):
+    test = models.ForeignKey(Test)
     question = models.CharField("Вопрос")
     answer = models.CharField("Правильный ответ")
     variants = models.TextField("Варианты")
@@ -17,6 +12,11 @@ class Test(models.Model):
     def __str__(self):
         return f"Тест: {self.question[:30]}..."  
   
+  
+class TestQuestionVariant(models.Model):
+    test_question = models.ForeignKey("TestQuestion")
+    text = models.CharField()
+    is_corect = models.BooleanField() 
     
 class Result(models.Model):
     student = models.ForeignKey('Student', on_delete=models.CASCADE, verbose_name="Ученик")
@@ -27,16 +27,7 @@ class Result(models.Model):
     def __str__(self):
         return f"{self.student} - {self.test}: {self.score} баллов"
         
-class Lesson(models.Model):
-    ltopic = models.CharField("Тема урока")
-    ltest = models.DateField("Дата")  
-    homework = models.TextField("Домашнее задание")
-    words = models.ManyToManyField(Word, verbose_name="Список слов")
-    test = models.OneToOneField(Test, on_delete=models.SET_NULL, null=True, blank=True, 
-                              verbose_name="Тест урока", related_name='lesson')
-    def __str__(self):
-        return f"Урок: {self.ltopic} ({self.ltest})"
-    
+#привязать к юзеру  
 class Student(models.Model):
     name = models.CharField("ФИО")
     login = models.CharField("Логин")
