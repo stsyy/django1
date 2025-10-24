@@ -17,20 +17,21 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 from english import views
 from rest_framework.routers import DefaultRouter
-from english.api import StudentsViewset, WordsViewset, TestsViewset, ResultsViewset, LessonsViewset
+from english.api import StudentsViewset, TestsViewset, TestQuestionsViewset, ResultsViewset
 
 router = DefaultRouter()
 router.register("students", StudentsViewset, basename="students")
-router.register("words", WordsViewset, basename="words")
 router.register("tests", TestsViewset, basename="tests")
 router.register("results", ResultsViewset, basename="results")
-router.register("lessons", LessonsViewset, basename="lessons")
+router.register("testQuestions", TestQuestionsViewset, basename="testQuestions")
 
 urlpatterns = [
     path('', views.ShowStudentsView.as_view()),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
-]
+]   +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

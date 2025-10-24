@@ -1,21 +1,21 @@
 from django.db import models  
-    
+
 class Test(models.Model):
-    name = models.CharField()    
+    name = models.CharField(max_length=255)  
 
 class TestQuestion(models.Model):
-    test = models.ForeignKey(Test)
-    question = models.CharField("Вопрос")
-    answer = models.CharField("Правильный ответ")
+    test = models.ForeignKey(Test, on_delete=models.CASCADE)  
+    question = models.CharField("Вопрос", max_length=500)
+    answer = models.CharField("Правильный ответ", max_length=255)
     variants = models.TextField("Варианты")
+    picture = models.ImageField(upload_to='questions/', blank=True, null=True, verbose_name="Изображение вопроса")
     
     def __str__(self):
-        return f"Тест: {self.question[:30]}..."  
-  
+        return f"Тест: {self.question[:30]}..."
   
 class TestQuestionVariant(models.Model):
-    test_question = models.ForeignKey("TestQuestion")
-    text = models.CharField()
+    test_question = models.ForeignKey("TestQuestion", on_delete=models.CASCADE) 
+    text = models.CharField(max_length=255)  
     is_corect = models.BooleanField() 
     
 class Result(models.Model):
@@ -27,13 +27,13 @@ class Result(models.Model):
     def __str__(self):
         return f"{self.student} - {self.test}: {self.score} баллов"
         
-#привязать к юзеру  
 class Student(models.Model):
-    name = models.CharField("ФИО")
-    login = models.CharField("Логин")
-    password = models.CharField("Пароль")
-    level = models.CharField("Уровень")
+    name = models.CharField("ФИО", max_length=255)  
+    login = models.CharField("Логин", max_length=100)
+    password = models.CharField("Пароль", max_length=100)
+    level = models.CharField("Уровень", max_length=50)
     progress = models.IntegerField("Прогресс")
+    picture = models.ImageField(upload_to='students/', blank=True, null=True, verbose_name="Фото студента")
         
     def __str__(self) -> str:
         return self.name

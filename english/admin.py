@@ -1,35 +1,33 @@
 from django.contrib import admin
-from english.models import Student, Word, Test, Result, Lesson
+from english.models import Student, Test, TestQuestion, TestQuestionVariant, Result
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'login', 'level', 'progress', 'test_results_count']
+    list_display = ['id', 'name', 'login', 'level', 'progress', 'results_count']
     
-    def test_results_count(self, obj):
+    def results_count(self, obj):
         return obj.result_set.count()
-    test_results_count.short_description = 'Пройдено тестов'
-
-@admin.register(Word)
-class WordAdmin(admin.ModelAdmin):
-    list_display = ['id', 'word', 'translation', 'topic', 'used_in_lessons']
-    
-    def used_in_lessons(self, obj):
-        return obj.lesson_set.count()
-    used_in_lessons.short_description = 'Уроков с словом'
+    results_count.short_description = 'Пройдено тестов'
 
 @admin.register(Test)
 class TestAdmin(admin.ModelAdmin):
-    list_display = ['id', 'question', 'answer', 'words_count', 'lesson_topic']
+    list_display = ['id', 'name', 'questions_count']
     
-    def words_count(self, obj):
-        return obj.words.count()
-    words_count.short_description = 'Кол-во слов'
+    def questions_count(self, obj):
+        return obj.testquestion_set.count()
+    questions_count.short_description = 'Кол-во вопросов'
+
+@admin.register(TestQuestion)
+class TestQuestionAdmin(admin.ModelAdmin):
+    list_display = ['id', 'question', 'answer', 'test', 'variants_count']
     
-    def lesson_topic(self, obj):
-        if obj.lesson:
-            return obj.lesson.ltopic
-        return "Нет урока"
-    lesson_topic.short_description = 'Тема урока'
+    def variants_count(self, obj):
+        return obj.testquestionvariant_set.count()
+    variants_count.short_description = 'Вариантов ответа'
+
+@admin.register(TestQuestionVariant)
+class TestQuestionVariantAdmin(admin.ModelAdmin):
+    list_display = ['id', 'text', 'is_corect', 'test_question']
 
 @admin.register(Result)
 class ResultAdmin(admin.ModelAdmin):
@@ -38,15 +36,3 @@ class ResultAdmin(admin.ModelAdmin):
     def student_level(self, obj):
         return obj.student.level
     student_level.short_description = 'Уровень ученика'
-
-@admin.register(Lesson)
-class LessonAdmin(admin.ModelAdmin):
-    list_display = ['id', 'ltopic', 'ltest', 'words_count', 'has_test']
-    
-    def words_count(self, obj):
-        return obj.words.count()
-    words_count.short_description = 'Кол-во слов'
-    
-    def has_test(self, obj):
-        return "Да" if obj.test else "Нет"
-    has_test.short_description = 'Есть тест'
