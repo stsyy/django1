@@ -14,15 +14,17 @@ from typing import Any
      
      #из методчики
 class StudentsViewset(
-    # ...
+views.ModelViewSet
 ):
-    queryset = Student.objects.all()
+    #queryset = Student.objects.all()
     serializer_class = StudentSerializer
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        
-        # фильтруем по текущему юзеру
-        qs = qs.filter(user=self.request.user)
 
-        return qs
+        user = self.request.user
+
+        if user.is_superuser:
+            return Student.objects.all()
+        else:
+
+            return Student.objects.filter(user=user)
