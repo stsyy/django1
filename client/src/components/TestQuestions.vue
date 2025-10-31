@@ -11,7 +11,6 @@ const questionPictureRef = ref();
 const questionAddImageUrl = ref();
 const loading = ref(false);
 
-// 🚩 НОВЫЕ ПЕРЕМЕННЫЕ для редактирования и просмотра
 const questionEditPictureRef = ref(); 
 const questionEditImageUrl = ref(); 
 const selectedImageUrl = ref(null); 
@@ -48,7 +47,6 @@ function questionAddPictureChange() {
   }
 }
 
-// 🚩 НОВАЯ ФУНКЦИЯ для превью при редактировании
 function questionEditPictureChange() {
   const file = questionEditPictureRef.value?.files?.[0];
   if (file) {
@@ -80,38 +78,32 @@ async function onQuestionAdd() {
 
 async function onQuestionEditClick(question) {
   questionToEdit.value = { ...question };
-  // Сбрасываем превью при открытии модалки
   questionEditImageUrl.value = null;
 }
 
-// 🚩 ИСПРАВЛЕННАЯ ФУНКЦИЯ ОБНОВЛЕНИЯ
 async function onUpdateQuestion() {
   const formData = new FormData();
   const file = questionEditPictureRef.value?.files?.[0];
 
-  // Если выбран новый файл, добавляем его
   if (file) {
     formData.append('picture', file);
   }
-  // Добавляем все остальные поля
+
   formData.append('test', questionToEdit.value.test);
   formData.append('question', questionToEdit.value.question);
   formData.append('answer', questionToEdit.value.answer);
   formData.append('variants', questionToEdit.value.variants);
   
-  // Используем axios.patch с FormData
   await axios.patch(`/api/test-questions/${questionToEdit.value.id}/`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
   
-  // Очистка полей и сброс превью
   if (questionEditPictureRef.value) questionEditPictureRef.value.value = "";
   questionEditImageUrl.value = null;
 
   await fetchQuestions();
 }
 
-// 🚩 НОВАЯ ФУНКЦИЯ для просмотра картинки
 function onImageClick(url) {
     selectedImageUrl.value = url;
     const modalElement = document.getElementById('imageModal');

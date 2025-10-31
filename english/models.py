@@ -34,6 +34,7 @@ class Student(models.Model):
     level = models.CharField("Уровень", max_length=50)
     progress = models.IntegerField("Прогресс")
     picture = models.ImageField(upload_to='students/', blank=True, null=True, verbose_name="Фото студента")
+    user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
         
     def __str__(self) -> str:
         return self.name

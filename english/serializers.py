@@ -5,8 +5,15 @@ class StudentSerializer(serializers.ModelSerializer):
     picture_url = serializers.SerializerMethodField()
     class Meta:
         model = Student
-        fields = '__all__'
+        fields = ('id', 'name', 'group', 'level', 'progress', 'picture', 'user', 'picture_url')
         
+    def create(self, validated_data):
+        if 'request' in self.context and hasattr(self.context['request'], 'user'):
+
+            validated_data['user'] = self.context['request'].user
+        
+        return super().create(validated_data)
+
     def get_picture_url(self, obj):
         if obj.picture:
             return obj.picture.url
