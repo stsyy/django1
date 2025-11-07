@@ -25,7 +25,7 @@ from rest_framework.routers import DefaultRouter
 from english.api import StudentsViewset, TestsViewset, TestQuestionsViewset, ResultsViewset
 
 router = DefaultRouter()
-router.register("students", StudentsViewset, basename="students")
+router.register("students", StudentsViewset, basename="student")
 router.register("tests", TestsViewset, basename="tests")
 router.register("results", ResultsViewset, basename="results")
 router.register("testQuestions", TestQuestionsViewset, basename="testQuestions")
@@ -34,4 +34,5 @@ urlpatterns = [
    # path('', views.ShowStudentsView.as_view()),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/logout/', views.logout_view, name='logout'),
 ]   +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -7,6 +7,20 @@ from rest_framework import views
 from rest_framework import viewsets
 from english.models import TestQuestion
 from .serializers import StudentSerializer, TestQuestionSerializer
+from django.contrib.auth import logout # Импортируем функцию logout
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from rest_framework import status
+
+@api_view(['POST']) # Обычно используют POST для действий, меняющих состояние (выход)
+@permission_classes([]) # Разрешаем всем (авторизованным)
+def logout_view(request):
+    """Сбрасывает сессию пользователя."""
+    if request.user.is_authenticated:
+        logout(request)
+        return Response({'detail': 'Успешный выход из системы.'}, status=status.HTTP_200_OK)
+    else:
+        return Response({'detail': 'Вы не авторизованы.'}, status=status.HTTP_401_UNAUTHORIZED)
 
 # Create your views here.
 #class ShowStudentsView(TemplateView):

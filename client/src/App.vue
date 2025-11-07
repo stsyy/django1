@@ -32,22 +32,24 @@
             </li>
           </ul>
 
-          <ul class="navbar-nav">
-            <li class="nav-item dropdown">
-              <a
-                class="nav-link dropdown-toggle"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Пользователь
-              </a>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/admin">Админка</a></li>
-              </ul>
-            </li>
-          </ul>
+      <ul class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a
+                        class="nav-link dropdown-toggle"
+                        href="#"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        Пользователь
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="http://127.0.0.1:8000/admin/" target="_blank">Админка</a></li> 
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#" @click.prevent="logoutUser">Выйти</a></li> 
+                        </ul>
+                </li>
+            </ul>
         </div>
       </div>
     </nav>
@@ -59,10 +61,34 @@
 </template>
 
 <script setup>
+import axios from 'axios';
+import { useRouter } from 'vue-router'; // Импортируем роутер для навигации
 
+const router = useRouter(); // Получаем экземпляр роутера
+
+const logoutUser = async () => {
+    try {
+        // Делаем POST-запрос к твоему Django-эндпоинту.
+        // URL должен быть полным, если ты используешь Vite dev server.
+        await axios.post('http://127.0.0.1:8000/api/logout/'); 
+        
+        // Оповещаем пользователя и перенаправляем на главную страницу (или страницу входа)
+        console.log('Выход успешен.');
+        // router.push('/') перенаправит на /students, согласно твоему роутингу.
+        // Если хочешь совсем сбросить страницу, можно просто перезагрузить
+        window.location.reload(); 
+        
+    } catch (error) {
+        console.error('Ошибка при выходе:', error);
+        // Если это ошибка 401 (Unauthorized), возможно, сессия уже истекла.
+        // В любом случае, перенаправляем для сброса состояния.
+        window.location.reload(); 
+    }
+};
 </script>
 
 <style>
+
 body {
   background-color: #f8f9fa;
 }
