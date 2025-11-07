@@ -39,10 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "english",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -131,3 +133,20 @@ REST_FRAMEWORK = {
 
 MEDIA_ROOT = BASE_DIR / "media"
 MEDIA_URL = "/media/"
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+# 2. Разрешаем передачу куки и аутентификационных данных через CORS (КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ)
+CORS_ALLOW_CREDENTIALS = True 
+
+# 3. Настройка для сессий Django (если используется DefaultRouter)
+# Это гарантирует, что сессия передается
+SESSION_COOKIE_SECURE = False # В режиме разработки это безопасно
+CSRF_COOKIE_SAMESITE = None # Это нужно для кросс-доменных запросов в современной версии Django
+
+# Дополнительная настройка, которая может помочь (CSRF - защита от подделки запросов)
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]

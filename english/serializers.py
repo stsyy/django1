@@ -5,7 +5,7 @@ class StudentSerializer(serializers.ModelSerializer):
     picture_url = serializers.SerializerMethodField()
     class Meta:
         model = Student
-        fields = ('id', 'name', 'group', 'level', 'progress', 'picture', 'user', 'picture_url')
+        fields = ('id', 'name', 'level', 'progress', 'picture', 'user', 'picture_url')
         
     def create(self, validated_data):
         if 'request' in self.context and hasattr(self.context['request'], 'user'):

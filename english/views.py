@@ -3,6 +3,10 @@ from django.http import HttpResponse
 from english.models import Student
 from django.views.generic import TemplateView
 from typing import Any 
+from rest_framework import views 
+from rest_framework import viewsets
+from english.models import TestQuestion
+from .serializers import StudentSerializer, TestQuestionSerializer
 
 # Create your views here.
 #class ShowStudentsView(TemplateView):
@@ -14,7 +18,7 @@ from typing import Any
      
      #из методчики
 class StudentsViewset(
-views.ModelViewSet
+viewsets.ModelViewSet
 ):
     #queryset = Student.objects.all()
     serializer_class = StudentSerializer
@@ -28,3 +32,18 @@ views.ModelViewSet
         else:
 
             return Student.objects.filter(user=user)
+        
+
+class TestQuestionViewSet(viewsets.ModelViewSet):
+    serializer_class = TestQuestionSerializer
+    
+    def get_queryset(self):
+        user = self.request.user
+        
+        # 1. Проверяем, является ли пользователь администратором 
+        if user.is_superuser:
+            # Администраторы видят все вопросы
+            return TestQuestion.objects.all()
+        else:
+            # Обычные пользователи (студенты) не должны видеть этот список
+            return TestQuestion.objects.none()

@@ -31,7 +31,7 @@ router.register("results", ResultsViewset, basename="results")
 router.register("testQuestions", TestQuestionsViewset, basename="testQuestions")
 
 urlpatterns = [
-    path('', views.ShowStudentsView.as_view()),
+   # path('', views.ShowStudentsView.as_view()),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
 ]   +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
