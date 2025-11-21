@@ -38,7 +38,6 @@ viewsets.ModelViewSet
     serializer_class = StudentSerializer
 
     def get_queryset(self):
-
         user = self.request.user
 
         if user.is_superuser:
