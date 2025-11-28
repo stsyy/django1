@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -100,6 +101,23 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True 
+
+# 👇 НУЖНО ДОБАВИТЬ: Указывает браузеру, что делать с куки при кросс-сайтовых запросах.
+# 'Lax' обычно работает лучше всего для сессий и CSRF в разработке, если нет HTTPS.
+CSRF_COOKIE_SAMESITE = 'Lax' 
+SESSION_COOKIE_SAMESITE = 'Lax' # Добавим и для сессии
+
+SESSION_COOKIE_SECURE = False 
+CSRF_COOKIE_SECURE = False # Тоже ставим False, раз ты на HTTP
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
 ]
 
 

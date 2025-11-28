@@ -3,7 +3,7 @@ from rest_framework import mixins
 from rest_framework.parsers import MultiPartParser, FormParser
 from english.models import Student, Test, TestQuestion, Result
 from english.serializers import StudentSerializer, TestSerializer, TestQuestionSerializer, ResultSerializer
-
+#прописываем разрешения
 class StudentsViewset(mixins.CreateModelMixin,
                      mixins.UpdateModelMixin,
                      mixins.RetrieveModelMixin,

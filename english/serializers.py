@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from english.models import Student, Test, TestQuestion, Result, TestQuestionVariant
+from english.models import Student, Test, TestQuestion, Result, TestQuestionVariant, Tutor
 
 class StudentSerializer(serializers.ModelSerializer):
     picture_url = serializers.SerializerMethodField()
@@ -18,6 +18,14 @@ class StudentSerializer(serializers.ModelSerializer):
         if obj.picture:
             return obj.picture.url
         return None
+    
+class TutorSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    
+    class Meta:
+        model = Tutor
+        fields = ['id', 'user', 'username', 'name']
+        read_only_fields = ['user']    
 
 class TestSerializer(serializers.ModelSerializer):
     class Meta:

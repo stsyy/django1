@@ -22,17 +22,20 @@ from django.conf.urls.static import static
 
 from english import views
 from rest_framework.routers import DefaultRouter
-from english.api import StudentsViewset, TestsViewset, TestQuestionsViewset, ResultsViewset
+#from english.api import StudentsViewset, TestsViewset, TestQuestionsViewset, ResultsViewset
 
 router = DefaultRouter()
-router.register("students", StudentsViewset, basename="student")
-router.register("tests", TestsViewset, basename="tests")
-router.register("results", ResultsViewset, basename="results")
-router.register("testQuestions", TestQuestionsViewset, basename="testQuestions")
+router.register("students", views.StudentsViewset, basename="student")
+router.register("tests", views.TestViewSet, basename="test") # Использовать TestViewSet, не TestsViewset
+router.register("results", views.ResultViewSet, basename="result") # Использовать ResultViewSet, не ResultsViewset
+router.register("test_question_variants", views.TestQuestionVariantViewSet, basename='testquestionvariant')
+router.register("test_questions", views.TestQuestionViewSet, basename="testquestion")
 
 urlpatterns = [
    # path('', views.ShowStudentsView.as_view()),
     path("admin/", admin.site.urls),
     path('api/', include(router.urls)),
+    path('api/login/', views.login_view, name='login'),
+    path('api/user/status/', views.user_status_view, name='user_status'),
     path('api/logout/', views.logout_view, name='logout'),
 ]   +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
