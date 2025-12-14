@@ -1,44 +1,79 @@
-// App.vue 
-
 <script setup>
-import {ref} from "vue";
-import {useRouter} from "vue-router";
-// Путь '@/stores/user_store' предполагаем правильным
-import {useUserStore} from '@/stores/user_store'; 
-import {storeToRefs} from "pinia";
-import axios from 'axios'; 
+import { onBeforeMount, onMounted, ref } from "vue"; 
+import { RouterView, useRouter } from "vue-router"; 
+import { useUserInfoStore } from './stores/user_store';
+import { storeToRefs } from "pinia";
+import axios from 'axios';
+import Cookies from "js-cookie";
 
-// --- Логика Pinia Store и формы ---
-const username = ref('');
-const password = ref('');
 
-const router = useRouter()
-const userStore = useUserStore()
-const { userInfo } = storeToRefs(userStore) 
+const router = useRouter();
 
-async function onFormSend() {
-    await userStore.login(username.value, password.value)
-    username.value = '';
-    password.value = '';
+//ДОБАВИЛА
+const userInfoStore = useUserInfoStore();
+const {
+  is_authenticated,
+  can_see_page2,
+} = storeToRefs(userInfoStore)
+
+async function onFetchStudents(){
+  //let r = await fetch("/api/students.json");
+  //let data = await r.json();
+  loading.value=true;
+
+  let data = (await axios.get("/api/students.json")).data;
+  students.value = data;
+  loading.value=false;
+
+  //console.log(r);
 }
 
-// --- Логика Logout ---
-const logoutUser = async () => {
-    try {
-        // ✅ ИСПРАВЛЕНИЕ: Добавлен withCredentials: true для корректного сброса сессии
-        await axios.post('http://127.0.0.1:8000/api/logout/', {}, {
-             withCredentials: true 
-        }); 
-        
-        // После выхода обновляем состояние
-        await userStore.checkLogin(); 
-        // window.location.reload(); // Эту строку можно убрать, если checkLogin корректно обновит UI
+async function onLogout() {
+  const r = await axios.post("/api/users/logout/")
+  userInfoStore.fetchUserInfo();
+  router.push("/login");
+}
 
-    } catch (error) {
-        console.error('Ошибка при выходе:', error);
-        // Если что-то пошло не так, все равно сбрасываем состояние
-        await userStore.checkLogin(); 
-        // window.location.reload();
-    }
-};
+
 </script>
+
+<template>
+ 
+  <nav class="d-flex" style="padding: 8px; justify-content: space-between;">
+   <div class="d-flex" style="gap: 8px">
+    <router-link to="/">Главная</router-link>
+    <!--<router-link to="/students" v-if="userInfoStore.hasPermission('general.can_see_page1')">Тесты</router-link>-->
+    <!--<router-link to="/tests" v-if="userInfoStore.hasPermission('general.can_see_page1')">Тесты</router-link>--> 
+    <!--<router-link to="/test-questions" v-if="userInfoStore.can_see_test_questions">Вопросы к тестам</router-link>-->
+    <router-link to="/results">Результаты</router-link>
+    <router-link to="/second-auth">SECOND</router-link>
+ 
+   </div>
+
+    <!--<button class="btn btn-info" @click="onFetchStudents">Показать</button>-->
+    <button @click="onLogout" v-if="is_authenticated">Выйти</button>
+  </nav>
+ {{ userInfo }}
+
+ <div>
+    <RouterView />
+ </div>
+  <div>
+    <div v-if="loading">Загрузка</div>
+    <div v-else v-for="s in students">{{ s.name }}</div>
+  </div>
+
+</template> 
+
+<style>
+h1 {
+  color: rgb(56, 56, 208);
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px 0;
+}
+</style>

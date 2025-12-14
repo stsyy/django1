@@ -127,8 +127,9 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 10
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
 }
 
 MEDIA_ROOT = BASE_DIR / "media"
@@ -138,15 +139,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
 ]
 
-# 2. Разрешаем передачу куки и аутентификационных данных через CORS (КЛЮЧЕВОЕ ИСПРАВЛЕНИЕ)
-CORS_ALLOW_CREDENTIALS = True 
-
-# 3. Настройка для сессий Django (если используется DefaultRouter)
-# Это гарантирует, что сессия передается
-SESSION_COOKIE_SECURE = False # В режиме разработки это безопасно
-CSRF_COOKIE_SAMESITE = None # Это нужно для кросс-доменных запросов в современной версии Django
-
-# Дополнительная настройка, которая может помочь (CSRF - защита от подделки запросов)
+SESSION_COOKIE_SECURE = False 
+CSRF_COOKIE_SAMESITE = None  
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
 ]

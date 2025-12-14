@@ -2,7 +2,7 @@
 import { onBeforeMount, ref } from 'vue';
 import axios from "axios";
 import Cookies from "js-cookie";
-import * as bootstrap from 'bootstrap'; // или import { Modal } from 'bootstrap'
+import * as bootstrap from 'bootstrap'; 
 
 const students = ref([]);
 const studentToAdd = ref({});
@@ -12,9 +12,9 @@ const studentAddImageUrl = ref();
 const tests = ref([]);
 const loading = ref(false);
 
-const studentEditPictureRef = ref(); // для поля ввода файла в модальном окне редактирования
-const studentEditImageUrl = ref(); // для превью картинки в модальном окне редактирования
-const selectedImageUrl = ref(null); // для модального окна просмотра картинки
+const studentEditPictureRef = ref(); 
+const studentEditImageUrl = ref(); 
+const selectedImageUrl = ref(null); 
 
 async function fetchTests() {
   const r = await axios.get("/api/tests");
@@ -47,7 +47,6 @@ function studentEditPictureChange() {
   }
 }
 
-// объединяем выбор картинки и превью
 function studentsAddPictureChange() {
   const file = studentsPictureRef.value?.files?.[0];
   if (file) {
@@ -72,7 +71,7 @@ async function onStudentAdd() {
 
   studentToAdd.value = {};
   studentAddImageUrl.value = null;
-  studentsPictureRef.value.value = ""; // очищаем input
+  studentsPictureRef.value.value = ""; 
   await fetchStudents();
 }
 
@@ -84,22 +83,20 @@ async function onUpdateStudent() {
   const formData = new FormData();
   const file = studentEditPictureRef.value?.files?.[0];
 
-  // Если выбран новый файл, добавляем его в FormData
   if (file) {
     formData.append('picture', file);
   }
-  // Добавляем остальные поля, даже если файл не менялся
+
   formData.append('name', studentToEdit.value.name);
   formData.append('login', studentToEdit.value.login);
   formData.append('password', studentToEdit.value.password);
   formData.append('level', studentToEdit.value.level);
   formData.append('progress', studentToEdit.value.progress);
 
-  // Используем axios.patch для частичного обновления и FormData
   await axios.patch(`/api/students/${studentToEdit.value.id}/`, formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
-  // Очистка полей
+
   if (studentEditPictureRef.value) studentEditPictureRef.value.value = "";
   studentEditImageUrl.value = null;
 
@@ -109,11 +106,9 @@ async function onUpdateStudent() {
 function onImageClick(url) {
     selectedImageUrl.value = url;
     
-    // Используем setTimeout чтобы Vue успел обновить DOM
     setTimeout(() => {
         const modalElement = document.getElementById('imageModal');
         if (modalElement) {
-            // Создаем экземпляр модального окна и показываем его
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
         }
@@ -123,7 +118,7 @@ function onImageClick(url) {
 onBeforeMount(async () => {
   axios.defaults.headers.common['X-CSRFToken'] = Cookies.get("csrftoken");
   await fetchTests();
-  await fetchStudents(); // авто-загрузка
+  await fetchStudents(); 
 })
 </script>
 

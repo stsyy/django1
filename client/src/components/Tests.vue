@@ -54,7 +54,6 @@ onBeforeMount(async () => {
     
     <div v-if="loading" class="text-center">Загрузка...</div>
 
-    <!-- Форма добавления -->
     <form @submit.prevent="onTestAdd" class="mb-4">
       <div class="row">
         <div class="col">
@@ -75,7 +74,6 @@ onBeforeMount(async () => {
       </div>
     </form>
 
-    <!-- Список тестов -->
     <div v-for="item in tests" :key="item.id" class="test-item d-flex justify-content-between align-items-center p-2 border-bottom">
       <div>{{ item.name }}</div>
       <div>
@@ -93,7 +91,6 @@ onBeforeMount(async () => {
       </div>
     </div>
 
-    <!-- Модальное окно редактирования -->
     <div class="modal fade" id="editTestModal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">

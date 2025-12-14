@@ -1,2 +1,4 @@
 django==5.2.5
 faker==37.12.0
+djangorestframework==3.16.1
+pyotp==2.9.0

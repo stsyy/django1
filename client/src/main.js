@@ -6,6 +6,10 @@ import "bootstrap/dist/css/bootstrap.css"
 
 import App from './App.vue'
 import router from './router'
+//ВОЗМОЖНО ЭТО НЕПРАВИЛЬНО
+import axios from 'axios'
+import Cookies from 'js-cookie'
+axios.defaults.headers.common["X-CSRFToken"] = Cookies.get("csrftoken");
 
 const app = createApp(App)
 

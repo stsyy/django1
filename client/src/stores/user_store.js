@@ -1,66 +1,42 @@
-// src/store/user_store.ts
+import { defineStore } from 'pinia';
+import axios from 'axios';
+import router from '@/router'; 
+import Cookies from 'js-cookie';
+import { onBeforeMount, ref } from "vue"; 
 
-import {defineStore} from "pinia";
-import {onBeforeMount, ref} from "vue";
-import axios from "axios";
+export const useUserInfoStore = defineStore("userInfoStore", () => {
 
-// Определяем Store с именем "userStore"
-export const useUserStore = defineStore("userStore", () => {
+    const username = ref();
+    const is_authenticated = ref(null);
+    const permissions = ref([])
+    //const can_see_page2 = ref(false);
+
+    async function fetchUserInfo() {
+        const r = await axios.get("/api/users/my/");
+        //userInfo.value=r.data; 
+        username.value = r.data.username;
+        is_authenticated.value = r.data.is_authenticated;
+        permissions.value = r.data.permissions;
+        //can_see_page2.value = r.data.can_see_page2;
+
+        axios.defaults.headers.common['X-CSRFToken'] = Cookies.get("csrftoken");
+    }
+
+    function hasPermission(name) {
+        return permissions.value.includes(name);
+    }
     
-    // Состояние, хранящее информацию о пользователе
-    const userInfo = ref({
-        is_authenticated: false,
-        username: 'Гость',
-        is_superuser: false,
-        // Здесь будут храниться все данные из /api/user/
-    })
-
-    // Функция для проверки текущего статуса авторизации
-    async function checkLogin() {
-        try {
-            // ✅ ИСПРАВЛЕНИЕ: Добавлен withCredentials: true
-            let r = await axios.get("http://127.0.0.1:8000/api/user/status", { 
-                withCredentials: true 
-            })
-            userInfo.value = r.data;
-        } catch (error) {
-            // Если запрос провалился (например, CORS или нет ответа), 
-            // сбрасываем состояние на анонима
-            console.error("Ошибка при проверке статуса авторизации:", error);
-            userInfo.value = {
-                is_authenticated: false,
-                username: 'Гость',
-                is_superuser: false,
-            };
-        }
-    }
-
-
-    // Функция для входа в систему
-    async function login(username, password) {
-        try {
-            // ✅ POST-запрос к эндпоинту, который мы создали
-        await axios.post("http://127.0.0.1:8000/api/login/", {
-                username: username,
-                password: password,
-            }, { withCredentials: true })
-            // Если вход успешен, обновляем данные пользователя
-            await checkLogin();
-        } catch (error) {
-            console.error("Ошибка входа:", error);
-            alert("Неверный логин или пароль.");
-        }
-    }
-
-    // Вызываем checkLogin перед монтированием приложения, чтобы сразу проверить сессию
     onBeforeMount(async () => {
-        await checkLogin();
+        
+        fetchUserInfo();
     })
 
-    // Возвращаем состояние и методы для использования в компонентах
     return {
-        userInfo,
-        checkLogin,
-        login,
+        username,
+        is_authenticated,
+        //can_see_page2, 
+        fetchUserInfo,
+        hasPermission,
     }
-})
+
+});

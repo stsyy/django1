@@ -16,13 +16,8 @@ class TestQuestion(models.Model):
         return f"Тест: {self.question[:30]}..."
     
 class Tutor(models.Model):
-    """Модель, представляющая репетитора, связанного с пользователем."""
-    # Связь один к одному с пользователем Django
     user = models.OneToOneField("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE) 
-    name = models.CharField("ФИО", max_length=255)
-    
-    # Дополнительные поля, если нужны (например, квалификация, стаж)
-    
+    name = models.CharField("ФИО", max_length=255)  
     def __str__(self):
         return self.name    
   
@@ -51,5 +46,7 @@ class Student(models.Model):
     picture = models.ImageField(upload_to='students/', blank=True, null=True, verbose_name="Фото студента")
     user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
         
-    def __str__(self) -> str:
-        return self.name
+    def __str__(self):
+        return f"Студент id: {self.id} ФИО: {self.name}"
+    
+   

@@ -2,6 +2,14 @@
 import { onBeforeMount, ref } from 'vue';
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useUserInfoStore } from '@/stores/user_store';
+import { storeToRefs } from 'pinia';
+
+
+const userInfoStore = useUserInfoStore();
+const{
+  username,
+}=storeToRefs(userInfoStore)
 
 const results = ref([]);
 const students = ref([]);
@@ -63,10 +71,10 @@ onBeforeMount(async () => {
 </script>
 
 <template>
+  {{ username }}
   <div class="container mt-4">
     <h2>Результаты тестов</h2>
     
-    <!-- Форма добавления -->
     <form @submit.prevent="onResultAdd" class="mb-4">
       <div class="row g-2">
         <div class="col-md-4">
@@ -105,7 +113,7 @@ onBeforeMount(async () => {
       </div>
     </form>
 
-    <!-- Список результатов -->
+  
     <div v-for="item in results" :key="item.id" class="result-item border p-3 mb-2">
       <div class="d-flex justify-content-between align-items-center">
         <div>
@@ -129,7 +137,6 @@ onBeforeMount(async () => {
       </div>
     </div>
 
-    <!-- Модальное окно редактирования -->
     <div class="modal fade" id="editResultModal" tabindex="-1">
       <div class="modal-dialog">
         <div class="modal-content">
