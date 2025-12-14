@@ -2,7 +2,7 @@
 import { onBeforeMount, ref } from 'vue';
 import axios from "axios";
 import Cookies from "js-cookie";
-import * as bootstrap from 'bootstrap'; 
+import * as bootstrap from 'bootstrap';
 
 const students = ref([]);
 const studentToAdd = ref({});
@@ -56,6 +56,24 @@ function studentsAddPictureChange() {
 
 async function onStudentAdd() {
   const formData = new FormData();
+  formData.append('picture', studentsPictureRef.value.files[0]);
+  formData.set('name', studentToAdd.value.name);
+  formData.append('login', studentToAdd.value.login || "");
+  formData.append('password', studentToAdd.value.password || "");
+  formData.append('level', studentToAdd.value.level || "");
+  formData.append('progress', studentToAdd.value.progress || 0);
+  await axios.post("/api/students/", formData, {
+    headers:{
+      'Content-Type': 'multipart/form-data'
+    }
+
+  });
+  await fetchStudents(); // переподтягиваю
+  studentToAdd.value={};
+}
+
+/*async function onStudentAdd() {
+  const formData = new FormData();
   const file = studentsPictureRef.value?.files?.[0];
 
   if (file) formData.append('picture', file);
@@ -65,7 +83,7 @@ async function onStudentAdd() {
   formData.append('level', studentToAdd.value.level || "");
   formData.append('progress', studentToAdd.value.progress || 0);
 
-  await axios.post("/api/students/", formData, {
+  await axios.post("/api/students/create-custom/", formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   });
 
@@ -73,7 +91,7 @@ async function onStudentAdd() {
   studentAddImageUrl.value = null;
   studentsPictureRef.value.value = ""; 
   await fetchStudents();
-}
+}*/
 
 async function onStudentEditClick(student) {
   studentToEdit.value = { ...student };

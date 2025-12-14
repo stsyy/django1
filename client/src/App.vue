@@ -38,8 +38,8 @@ async function onLogout() {
 </script>
 
 <template>
- 
-  <nav class="d-flex" style="padding: 8px; justify-content: space-between;">
+
+  <nav class="d-flex bg-success" style="padding: 8px; justify-content: space-between;">
    <div class="d-flex" style="gap: 8px">
     <router-link to="/">Главная</router-link>
     <!--<router-link to="/students" v-if="userInfoStore.hasPermission('general.can_see_page1')">Тесты</router-link>-->
@@ -51,7 +51,7 @@ async function onLogout() {
    </div>
 
     <!--<button class="btn btn-info" @click="onFetchStudents">Показать</button>-->
-    <button @click="onLogout" v-if="is_authenticated">Выйти</button>
+    <button type="button" class="btn btn-danger" @click="onLogout" v-if="is_authenticated">Выйти</button>
   </nav>
  {{ userInfo }}
 
@@ -62,7 +62,6 @@ async function onLogout() {
     <div v-if="loading">Загрузка</div>
     <div v-else v-for="s in students">{{ s.name }}</div>
   </div>
-
 </template> 
 
 <style>
