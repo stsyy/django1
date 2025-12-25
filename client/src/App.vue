@@ -9,7 +9,6 @@ import Cookies from "js-cookie";
 
 const router = useRouter();
 
-//ДОБАВИЛА
 const userInfoStore = useUserInfoStore();
 const {
   is_authenticated,
@@ -39,19 +38,19 @@ async function onLogout() {
 
 <template>
 
-  <nav class="d-flex bg-success" style="padding: 8px; justify-content: space-between;">
+  <nav class="d-flex" style="padding: 8px; justify-content: space-between;">
    <div class="d-flex" style="gap: 8px">
     <router-link to="/">Главная</router-link>
-    <!--<router-link to="/students" v-if="userInfoStore.hasPermission('general.can_see_page1')">Тесты</router-link>-->
-    <!--<router-link to="/tests" v-if="userInfoStore.hasPermission('general.can_see_page1')">Тесты</router-link>--> 
-    <!--<router-link to="/test-questions" v-if="userInfoStore.can_see_test_questions">Вопросы к тестам</router-link>-->
-    <router-link to="/results">Результаты</router-link>
+    <router-link to="/students" v-if="userInfoStore.hasPermission('general.can_see_all_students')">Студенты</router-link>
+    <router-link to="/tests" v-if="userInfoStore.hasPermission('general.can_see_test_questions')">Тесты</router-link>
+    <router-link to="/test-questions" >Вопросы тестов</router-link>
+    <router-link to="/results" v-if="userInfoStore.hasPermission('general.can_see_test_questions_variants')">Результаты</router-link>
     <router-link to="/second-auth">SECOND</router-link>
- 
+    <button type="button" class="btn btn-danger" @click="onLogout" v-if="is_authenticated">Выйти</button>
    </div>
 
     <!--<button class="btn btn-info" @click="onFetchStudents">Показать</button>-->
-    <button type="button" class="btn btn-danger" @click="onLogout" v-if="is_authenticated">Выйти</button>
+    
   </nav>
  {{ userInfo }}
 

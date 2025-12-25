@@ -5,10 +5,8 @@ class Test(models.Model):
     user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
 
 class TestQuestion(models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)  
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
     question = models.CharField("Вопрос", max_length=500)
-    answer = models.CharField("Правильный ответ", max_length=255)
-    variants = models.TextField("Варианты")
     picture = models.ImageField(upload_to='questions/', blank=True, null=True, verbose_name="Изображение вопроса")
     user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
     
@@ -22,9 +20,9 @@ class Tutor(models.Model):
         return self.name    
   
 class TestQuestionVariant(models.Model):
-    test_question = models.ForeignKey("TestQuestion", on_delete=models.CASCADE) 
+    test_question = models.ForeignKey(TestQuestion, on_delete=models.CASCADE, related_name='variants')
     text = models.CharField(max_length=255)  
-    is_corect = models.BooleanField() 
+    is_correct = models.BooleanField() 
     user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
     
 class Result(models.Model):
@@ -45,7 +43,8 @@ class Student(models.Model):
     progress = models.IntegerField("Прогресс")
     picture = models.ImageField(upload_to='students/', blank=True, null=True, verbose_name="Фото студента")
     user=models.ForeignKey("auth.User", verbose_name="Пользователь", on_delete=models.CASCADE, null=True)
-        
+    tutor = models.ForeignKey("auth.User",on_delete=models.SET_NULL,null=True,blank=True,related_name='students',limit_choices_to={'userprofile__type': 'tutor'})
+    assigned_tests = models.ManyToManyField(Test, blank=True, verbose_name="Назначенные тесты")    
     def __str__(self):
         return f"Студент id: {self.id} ФИО: {self.name}"
     

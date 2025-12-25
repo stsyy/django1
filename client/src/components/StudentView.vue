@@ -17,8 +17,6 @@ onBeforeMount(fetchStudents)
 
 </script>
 
-
-
 <template>
     Страница 1
     <button @click="onCreateStudentClick">Создать студента</button>

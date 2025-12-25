@@ -25,14 +25,33 @@ class UserProfile(TimestampModel):
     type = models.TextField(choices=Type, null=True, blank=True)
     totp_key = models.CharField(max_length=128, null=True, blank=True, default=pyotp.random_hex)
 
-    can_see_test_questions = models.BooleanField(db_default=False, null=True, blank=True)
-
     class Meta:
         permissions = [
-            ("can_create_students", "Может создавать студентов"),
-            ("can_see_test_questions", "Может видеть вопросы тестов"),
+                    
             ("can_see_all_students", "Может видеть всех студентов"),
+            ("can_create_students", "Может создавать студентов"),
+            ("can_update_students", "Может редактировать студентов"),
+            ("can_delete_students", "Может удалять студентов"),
+            ("can_see_himself", "Может видеть только себя"),
+
+            ("can_see_test_questions", "Может видеть вопросы тестов"),
+            ("can_create_test_questions", "Может создавать вопросы тестов"),
+            ("can_update_test_questions", "Может редактировать вопросы тестов"),
+            ("can_delete_test_questions", "Может удалять вопросы тестов"),
+
+            ("can_see_test_question_variants", "Может видеть варианты вопросов"),
+            ("can_create_test_question_variants", "Может создавать варианты вопросов"),
+            ("can_update_test_question_variants", "Может редактировать варианты вопросов"),
+            ("can_delete_test_question_variants", "Может удалять варианты вопросов"),
+
             ("can_see_all_results", "Может видеть все результаты"),
+            ("can_see_own_results", "Может видеть только свои результаты"),
+
+            ("can_see_all_tutors", "Может видеть всех преподавателей"),
+            ("can_see_his_tutor", "Может видеть своего преподавателя"),
+            ("can_create_tutors", "Может создавать преподавателей"),
+            ("can_update_tutors", "Может редактировать преподавателей"),
+            ("can_delete_tutors", "Может удалять преподавателей"),
         ]
     
     def save(self, *args, **kwargs):

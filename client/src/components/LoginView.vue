@@ -37,17 +37,59 @@ async function onLoginFormSubmit() {
 </script>
 
 <template>
-
-  <form @submit.stop.prevent="onLoginFormSubmit" class = "form d-flex flex-column p-3" 
+ <div class="login-container">
+  <h2 class="login-title">Вход в систему</h2>
+  <form @submit.stop.prevent="onLoginFormSubmit" class = "login-form" 
   style="gap: 8px">
     <input placeholder="логин" class="form-control" type="text" v-model="username">
     <input placeholder="пароль" class="form-control" type="password"v-model="password">
     <button class="btn btn-info">войти</button>
   </form>
-  
+</div>
 </template>
 
+<style scoped>
+.login-container {
+  max-width: 350px;
+  margin: 100px auto;
+  padding: 20px 30px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  background-color: #fff;
+}
 
-<style>
+.login-container h2 {
+  margin-bottom: 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-form input {
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.login-form button {
+  padding: 10px;
+  font-size: 16px;
+  background-color: #0d6efd;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.login-form button:hover {
+  background-color: #0b5ed7;
+}
 </style>

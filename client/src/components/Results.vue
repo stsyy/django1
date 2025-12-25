@@ -30,14 +30,9 @@ async function fetchTests(){
 
 async function fetchResults(){
   loading.value = true;
-  try {
     const r = await axios.get("/api/results");
     results.value = r.data;
-  } catch (error) {
-    console.error('Ошибка загрузки:', error);
-  } finally {
-    loading.value = false;
-  }
+
 }
 
 async function onRemoveClick(result) {
